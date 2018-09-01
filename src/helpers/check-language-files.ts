@@ -1,44 +1,26 @@
-/**
- * This is a script to find issues in the lang.js files and output in a pretty fashion, ideally give us a base and
- * something to set a target from, even assign ownership of tech debt to.
- *
- * Some Interesting Reading Material
- * - https://help.phraseapp.com/phraseapp-for-developers
- * - https://help.phraseapp.com/translate-website-and-app-content/use-icu-message-format/icu-message-format
- * - https://github.com/yahoo/react-intl/wiki/API#definemessages
- *
- * To run this script, you might need to install a few deps
- * `$ npm i -g glob chalk async`
- *
- * Usage
- * --json (-j)
- *      This returns a nice JSON stringified list of issues
- * --short (-s)
- *      When used with JSON produces a basic count of the issues (e.g.
- * {"arrayName":97,"functionName":45,"date":"2018-08-22T07:12:23.825Z"})
- */
-
 import fs from 'fs';
-import async from 'async';
 import glob from 'glob';
+// import async from 'async'; // <-- need to limit the io with something like this
+
+import { ChecksUpdateParamsOutputAnnotations } from '@octokit/rest';
 
 type IssueTypes = 'booleanName' | 'functionName' | 'arrayName'
 
-const ISSUE_TYPES: {[name: string]: IssueTypes} = {
+const ISSUE_TYPES: { [name: string]: IssueTypes } = {
   BOOLEANS: 'booleanName',
   FUNCTIONS: 'functionName',
   ARRAYS: 'arrayName'
 };
 
 // @ts-ignore
-const ISSUE_HELP: {IssueTypes: string} = {
+const ISSUE_HELP: { IssueTypes: string } = {
   [ISSUE_TYPES.BOOLEANS]: 'Remove config from translations',
   [ISSUE_TYPES.FUNCTIONS]: 'Switch to ICU message format (see https://formatjs.io/guides/message-syntax/)',
   [ISSUE_TYPES.ARRAYS]: 'Give each item a unique key (https://phraseapp.com/docs/guides/formats/simple-json/)'
 };
 
 // @ts-ignore
-const ANNONTATION_LEVELS: {IssueTypes: string} = {
+const ANNONTATION_LEVELS: { IssueTypes: string } = {
   [ISSUE_TYPES.BOOLEANS]: 'failure',
   [ISSUE_TYPES.FUNCTIONS]: 'failure',
   [ISSUE_TYPES.ARRAYS]: 'failure',
@@ -52,9 +34,8 @@ interface IBaseIssue {
 }
 
 function buildIssue(type: string, meta: string, file: string, line: number, column: number): IBaseIssue {
-  return { issueType: type, [type]: meta, file, line, column };
+  return {issueType: type, [type]: meta, file, line, column};
 }
-
 
 /**
  * Get all issues in a file
@@ -62,7 +43,7 @@ function buildIssue(type: string, meta: string, file: string, line: number, colu
  * @param filePath
  */
 // @ts-ignore
-async function findIssuesInFilePath(filePath: string): Promise<IBaseIssue[]> {
+async function findIssuesInFilePath(filePath: string): Promise<any> {
   const data = await getFileContents(filePath) as string;
   let matches;
   let issues = [];
@@ -105,11 +86,6 @@ async function findIssuesInFilePath(filePath: string): Promise<IBaseIssue[]> {
   }
 }
 
-/**
- * Gets contents of a file
- * @param {String} fileLocation
- * @return {Promise<String>}
- */
 function getFileContents(fileLocation: string): Promise<string> {
   return new Promise((resolve, reject) => {
     fs.readFile(fileLocation, 'utf8', (err, contents) => {
@@ -118,14 +94,32 @@ function getFileContents(fileLocation: string): Promise<string> {
   });
 }
 
-export default (globPattern: string) => {
+export default (globPattern: string): Promise<ChecksUpdateParamsOutputAnnotations[]> => {
   return new Promise((resolve, reject) => {
     glob(`${globPattern}/**/lang.js`, {realpath: true}, (er, files) => {
-      async.mapLimit(files, 5, findIssuesInFilePath, (err, fileIssues) => {
-        if (err) throw err;
-
-        resolve(fileIssues);
-      });
+      Promise
+        .all(files.map((file) => findIssuesInFilePath(file)))
+        .then((issues) => {
+          const annotations = issues
+            .reduce((acc, curr) => [...acc, ...curr], [])
+            .filter((a: any) => a)
+            .map((issue: IBaseIssue) => {
+              return {
+                path: issue.file.replace(globPattern, ''),
+                start_line: issue.line,
+                end_line: issue.line,
+                start_column: issue.column,
+                // @ts-ignore
+                annotation_level: ANNONTATION_LEVELS[issue.issueType] as string,
+                // @ts-ignore
+                message: ISSUE_HELP[issue.issueType] as string,
+                // @ts-ignore
+                title: `Warning with ${issue.issueType} of ${issue[issue.issueType]}`
+              };
+            })
+          ;
+          resolve(annotations);
+        });
     });
   });
 }
