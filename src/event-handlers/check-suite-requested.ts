@@ -5,6 +5,7 @@ import checkLanguageFiles from './check-language-files';
 import * as C from '../constants';
 
 export default async (context: Context) => {
+  context.log('New Event ' + context.name);
   const {id, payload: { repository, check_suite} } = context;
 
   // Setup base vars
@@ -25,10 +26,11 @@ export default async (context: Context) => {
     // 2. Fetch the commit
     const repoPath = await getCommit({repo, owner, sha: head_sha, token: process.env.GITHUB_ACCESS_TOKEN as string, id});
 
+    console.log(repoPath);
+
     // 3. Perform analysis on the files
     const errors = await checkLanguageFiles(repoPath);
     console.log(JSON.stringify(errors));
-    console.log('z');
 
     // 4. Update the Check
 

@@ -110,7 +110,7 @@ async function findIssuesInFilePath(filePath: string): Promise<IBaseIssue[]> {
  * @param {String} fileLocation
  * @return {Promise<String>}
  */
-function getFileContents(fileLocation: string) {
+function getFileContents(fileLocation: string): Promise<string> {
   return new Promise((resolve, reject) => {
     fs.readFile(fileLocation, 'utf8', (err, contents) => {
       err ? reject(err) : resolve(contents);
@@ -118,16 +118,14 @@ function getFileContents(fileLocation: string) {
   });
 }
 
-export default function buildReport(globPattern: string): any {
-  return new Promise(((resolve) => {
+export default (globPattern: string) => {
+  return new Promise((resolve, reject) => {
     glob(`${globPattern}/**/lang.js`, {realpath: true}, (er, files) => {
       async.mapLimit(files, 5, findIssuesInFilePath, (err, fileIssues) => {
         if (err) throw err;
-        console.log('y');
 
-        // const issues = fileIssues.filter(r => r); // remove any results without issues
-        return resolve(fileIssues);
+        resolve(fileIssues);
       });
     });
-  }));
+  });
 }
