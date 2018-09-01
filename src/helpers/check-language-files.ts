@@ -106,6 +106,7 @@ export default (globPattern: string): Promise<ChecksUpdateParamsOutputAnnotation
             .map((issue: IBaseIssue) => {
               return {
                 path: issue.file.replace(globPattern, ''),
+                blob_href: issue.file.replace(globPattern, ''),
                 start_line: issue.line,
                 end_line: issue.line,
                 start_column: issue.column,
