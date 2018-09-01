@@ -63,7 +63,7 @@ export default async (context: Context) => {
     await context.github.checks.update({
       ...baseParams,
       check_run_id: createdCheck.data.id as string, // <-- this appears to be a number, @types are wrong here
-      conclusion: C.CHECK_CONCLUSION.CANCELLED as any,
+      conclusion: C.CHECK_CONCLUSION.TIMED_OUT as any,
       completed_at: new Date().toISOString(),
       output: {
         title: 'Something failed with on the bot, sorry!',
