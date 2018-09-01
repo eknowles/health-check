@@ -8,14 +8,14 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
-    "pretty": true,
+    "pretty": false,
     "strict": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "./lib",
     "skipLibCheck": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "declaration": true
+    "declaration": false
   },
   "include": [
     "src/**/*"
