@@ -2,7 +2,7 @@ import fs from 'fs';
 import glob from 'glob';
 // import async from 'async'; // <-- need to limit the io with something like this
 
-import { ChecksUpdateParamsOutputAnnotations } from '@octokit/rest';
+// import { ChecksUpdateParamsOutputAnnotations } from '@octokit/rest';
 
 type IssueTypes = 'booleanName' | 'functionName' | 'arrayName'
 
@@ -21,9 +21,9 @@ const ISSUE_HELP: { IssueTypes: string } = {
 
 // @ts-ignore
 const ANNONTATION_LEVELS: { IssueTypes: string } = {
-  [ISSUE_TYPES.BOOLEANS]: 'failure',
-  [ISSUE_TYPES.FUNCTIONS]: 'failure',
-  [ISSUE_TYPES.ARRAYS]: 'failure',
+  [ISSUE_TYPES.BOOLEANS]: 'warning',
+  [ISSUE_TYPES.FUNCTIONS]: 'warning',
+  [ISSUE_TYPES.ARRAYS]: 'warning',
 };
 
 interface IBaseIssue {
@@ -94,7 +94,7 @@ function getFileContents(fileLocation: string): Promise<string> {
   });
 }
 
-export default (globPattern: string): Promise<ChecksUpdateParamsOutputAnnotations[]> => {
+export default (globPattern: string): Promise<any[]> => {
   return new Promise((resolve, reject) => {
     glob(`${globPattern}/**/lang.js`, {realpath: true}, (er, files) => {
       Promise
@@ -115,7 +115,13 @@ export default (globPattern: string): Promise<ChecksUpdateParamsOutputAnnotation
                 // @ts-ignore
                 message: ISSUE_HELP[issue.issueType] as string,
                 // @ts-ignore
-                title: `Warning with ${issue.issueType} of ${issue[issue.issueType]}`
+                title: `Warning with ${issue.issueType} of ${issue[issue.issueType]}`,
+
+                // required
+                // @ts-ignore
+                // warning_level: ANNONTATION_LEVELS[issue.issueType] as any,
+                // blob_href: '',
+                // filename: '',
               };
             })
           ;

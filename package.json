@@ -21,7 +21,7 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "@octokit/rest": "^15.10.0",
+    "@octokit/rest": "https://github.com/octokit/rest.js.git#e24f5674a2f73258df7c16fe832192d593503dba",
     "@types/async": "^2.0.49",
     "@types/glob": "^5.0.35",
     "async": "^2.6.1",
