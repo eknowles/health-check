@@ -1,0 +1,8 @@
+{
+  "name": "health-check",
+  "version": "1.0.0",
+  "main": "./lib/index.js",
+  "dependencies": {
+    "typescript": "^3.0.3"
+  }
+}
