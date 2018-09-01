@@ -99,8 +99,10 @@ async function findIssuesInFilePath(filePath: string): Promise<IBaseIssue[]> {
     const issue = buildIssue(ISSUE_TYPES.BOOLEANS, matches[1], filePath, line, column);
     issues.push(issue);
   }
-  console.log('y');
-  return Promise.resolve(issues);
+
+  if (issues.length) {
+    return issues;
+  }
 }
 
 /**

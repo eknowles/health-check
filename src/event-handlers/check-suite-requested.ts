@@ -19,8 +19,7 @@ export default async (context: Context) => {
   const baseParams = {owner, repo, name, details_url, started_at, external_id: id};
 
   // 1. First Create a Check and mark as in_progress
-  const createdCheck = await context.github.checks.create({...baseParams, head_sha, status: C.CHECK_STATUS.IN_PROGRESS as any});
-  context.log(createdCheck);
+  const createdCheck = await context.github.checks.create({...baseParams, head_sha, status: C.CHECK_STATUS.QUEUED as any});
 
   try {
     // 2. Fetch the commit
