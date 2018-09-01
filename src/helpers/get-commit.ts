@@ -1,6 +1,14 @@
 import { spawn } from 'child_process';
 
-function cloneRepository(url: string, path: string) {
+export interface IGetCommitOptions {
+  token: string;
+  owner: string;
+  repo: string;
+  sha: string;
+  id: string;
+}
+
+function cloneRepository(url: string, path: string): Promise<string> {
   return new Promise(((resolve, reject) => {
     const gitClone = spawn('git', ['clone', url, path]);
 
@@ -10,7 +18,7 @@ function cloneRepository(url: string, path: string) {
   }));
 }
 
-function checkoutCommit(commit: string, path: string) {
+function checkoutCommit(commit: string, path: string): Promise<string> {
   return new Promise(((resolve, reject) => {
     const gitClone = spawn('git', ['checkout', commit], {cwd: path});
 
@@ -20,25 +28,11 @@ function checkoutCommit(commit: string, path: string) {
   }));
 }
 
-export interface IGetCommitOptions {
-  token: string;
-  owner: string;
-  repo: string;
-  sha: string;
-}
-
-export default (options: IGetCommitOptions) => {
-  const {owner, token, repo, sha} = options;
+export default (options: IGetCommitOptions): Promise<string> => {
+  const {owner, token, repo, sha, id} = options;
   const url = `https://${token}@github.com/${owner}/${repo}`;
-  const tmpPath = `${process.cwd()}/tmp/${sha}`;
+  const tmpPath = `${process.cwd()}/tmp/${id}`;
 
-  cloneRepository(url, tmpPath)
-    .then(() => checkoutCommit(sha, tmpPath))
-    .then(() => {
-      console.log('done');
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  ;
+  return cloneRepository(url, tmpPath)
+    .then(() => checkoutCommit(sha, tmpPath));
 }
