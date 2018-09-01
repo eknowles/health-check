@@ -107,7 +107,6 @@ export default (globPattern: string): Promise<ChecksUpdateParamsOutputAnnotation
               const filePath = issue.file.replace(`${globPattern}/`, '');
               return {
                 path: filePath,
-                filename: filePath,
                 start_line: issue.line,
                 end_line: issue.line,
                 start_column: issue.column,
