@@ -4,6 +4,6 @@ import * as C from './constants';
 
 export = (app: Application) => {
   app.on(C.EVENT.CHECK_SUITE.REQUESTED, async context => {
-    context.log({event: context.event, action: context.payload.action});
+    context.log(context);
   });
 }
