@@ -59,6 +59,7 @@ export default async (context: Context) => {
     // 5. Remove the tmp files
 
     // 6. Profit.
+
   } catch (e) {
     await context.github.checks.update({
       ...baseParams,
@@ -66,7 +67,7 @@ export default async (context: Context) => {
       conclusion: C.CHECK_CONCLUSION.TIMED_OUT as any,
       completed_at: new Date().toISOString(),
       output: {
-        title: 'Something failed with on the bot, sorry!',
+        title: 'Something failed, sorry!',
         summary: e.message
       }
     });
