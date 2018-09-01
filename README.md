@@ -24,3 +24,4 @@ For more, check out the [Contributing Guide](CONTRIBUTING.md).
 ## License
 
 [ISC](LICENSE) © 2018 Edward Knowles <mail@eknowles.com>
+
