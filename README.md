@@ -2,6 +2,14 @@
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) that A Probot app
 
+# Requirements
+
+In order for nodegit to work, you need to have openssl installed localled
+
+```sh
+brew install openssl
+```
+
 ## Setup
 
 ```sh
@@ -24,3 +32,4 @@ For more, check out the [Contributing Guide](CONTRIBUTING.md).
 ## License
 
 [ISC](LICENSE) © 2018 Edward Knowles <mail@eknowles.com>
+

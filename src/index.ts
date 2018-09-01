@@ -1,16 +1,9 @@
 import { Application } from 'probot';
 
+import * as C from './constants';
+import CheckSuiteRequested from './event-handlers/check-suite-requested';
+
 export = (app: Application) => {
-  // Your code here
-  app.log('Yay, the app was loaded!');
-
-  // For more information on building apps:
-  // https://probot.github.io/docs/
-
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
-
-  app.on(`*`, async context => {
-    context.log({event: context.event, action: context.payload.action});
-  });
+  app.on(C.EVENT.CHECK_SUITE.REQUESTED, CheckSuiteRequested);
+  app.on(C.EVENT.CHECK_SUITE.REREQUESTED, CheckSuiteRequested);
 }
