@@ -21,6 +21,7 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
+    "@octokit/rest": "^15.10.0",
     "@types/async": "^2.0.49",
     "@types/glob": "^5.0.35",
     "async": "^2.6.1",
