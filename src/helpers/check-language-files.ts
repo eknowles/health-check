@@ -104,9 +104,9 @@ export default (globPattern: string): Promise<ChecksUpdateParamsOutputAnnotation
             .reduce((acc, curr) => [...acc, ...curr], [])
             .filter((a: any) => a)
             .map((issue: IBaseIssue) => {
+              const filePath = issue.file.replace(`${globPattern}/`, '');
               return {
-                path: issue.file.replace(globPattern, ''),
-                blob_href: issue.file.replace(globPattern, ''),
+                path: filePath,
                 start_line: issue.line,
                 end_line: issue.line,
                 start_column: issue.column,
