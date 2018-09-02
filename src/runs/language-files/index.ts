@@ -20,7 +20,10 @@ export default (repoPath: string): Promise<ChecksUpdateParamsOutputAnnotations[]
           const annotations = issues
             .reduce((acc, curr) => [...acc, ...curr], [])
             .filter((a: any) => a)
-            .map((issue: any) => ({...issue, path: issue.path.replace(`${repoPath}/`, '')}));
+            .map((issue: any) => ({
+              ...issue,
+              path: issue.path.replace(`${repoPath}/`, ''),
+            }));
 
           resolve(annotations);
         });

@@ -6,6 +6,10 @@ export const EVENT = {
   CHECK_SUITE: {
     REQUESTED: 'check_suite.requested',
     REREQUESTED: 'check_suite.rerequested'
+  },
+  CHECK_RUN: {
+    REQUESTED: 'check_run.requested',
+    REREQUESTED: 'check_run.rerequested'
   }
 };
 

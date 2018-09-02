@@ -28,14 +28,12 @@ function checkoutCommit(commit: string, path: string): Promise<string> {
   }));
 }
 
-/**
- *
- * @param options
- */
 export default (options: IGetCommitOptions): Promise<string> => {
-  const {owner, token, repo, sha, id} = options;
+  const {owner, token, repo, sha} = options;
   const url = `https://${token}@github.com/${owner}/${repo}`;
-  const tmpPath = `${process.cwd()}/tmp/${id}`;
+  const tmpPath = `${process.cwd()}/tmp/${sha}`;
+
+  // TODO check if dir exists (in case of re-runs) and simply return the path if so.
 
   return cloneRepository(url, tmpPath)
     .then(() => checkoutCommit(sha, tmpPath));

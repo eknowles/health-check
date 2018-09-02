@@ -11,5 +11,6 @@ export default {
     amount: (value, arg) => value + arg,
     stars: 'many',
     alive: true,
+    test: 1,
   }
 }

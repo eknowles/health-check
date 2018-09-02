@@ -14,6 +14,18 @@ This check looks for issues within `lang.js` files.
 - Should not contain booleans
 - Should not contain functions
 
+### File Size (TODO)
+
+This check looks at all files.
+
+- Should be under 1mb in size
+
+### JSON Parse (TODO)
+
+This check looks at .json files that have been edited in this commit
+
+- Should parse
+
 ## Setup
 
 ```sh

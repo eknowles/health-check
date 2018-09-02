@@ -4,7 +4,7 @@ import getCommit from '../helpers/fetch-repo-commit';
 import runLanguageFiles from '../runs/language-files';
 import * as C from '../constants';
 
-export default async (context: Context) => {
+export default async (context: Context): Promise<void> => {
   const {id, payload: {repository, check_suite}} = context;
 
   // Setup base vars
@@ -18,7 +18,7 @@ export default async (context: Context) => {
   // Standard params that all check api requests will use
   const baseParams = {owner, repo, name, details_url, started_at, external_id: id};
 
-  // 1. First Create a Check Suite and mark as in_progress
+  // 1. First Create a Check run and mark as in_progress
   const createdCheck = await context.github.checks.create({
     ...baseParams,
     head_sha,
@@ -55,17 +55,25 @@ export default async (context: Context) => {
     const conclusion: any = issueCount ? C.CHECK_CONCLUSION.FAILURE : C.CHECK_CONCLUSION.SUCCESS;
     const summary = issueCount ? `Looks like there are ${issueCount} issues to be resolved` : 'I hope we get to see this message';
 
-    await context.github.checks.update({
+    const params = {
       ...baseParams,
       check_run_id: createdCheck.data.id as string, // <-- this appears to be a number, @types are wrong here
       conclusion,
       completed_at: new Date().toISOString(),
       output: {
-        title: `${C.CHECK_NAMES.LANG_JS} Results`,
+        title: 'Summary',
         summary,
         annotations,
+        images: [
+          {
+            alt: 'wow',
+            image_url: 'https://media.giphy.com/media/Ki9ZNTNS7aC9q/giphy.gif'
+          }
+        ]
       }
-    });
+    };
+    console.log(JSON.stringify(params));
+    await context.github.checks.update(params);
 
     // 5. Remove the tmp files
 

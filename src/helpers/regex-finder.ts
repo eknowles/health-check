@@ -32,7 +32,8 @@ export default (options: IRegexFinderOptions): ChecksUpdateParamsOutputAnnotatio
     const issue: ChecksUpdateParamsOutputAnnotations = {
       title,
       message,
-      warning_level: level,
+      // @ts-ignore
+      annotation_level: level,
       // @ts-ignore
       path,
       start_line: line,
