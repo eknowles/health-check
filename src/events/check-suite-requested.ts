@@ -1,11 +1,10 @@
 import { Context } from 'probot';
 
-import getCommit from '../helpers/get-commit';
-import checkLanguageFiles from '../helpers/check-language-files';
+import getCommit from '../helpers/fetch-repo-commit';
+import runLanguageFiles from '../runs/language-files';
 import * as C from '../constants';
 
 export default async (context: Context) => {
-  context.log('New Event ' + context.name);
   const {id, payload: {repository, check_suite}} = context;
 
   // Setup base vars
@@ -19,7 +18,7 @@ export default async (context: Context) => {
   // Standard params that all check api requests will use
   const baseParams = {owner, repo, name, details_url, started_at, external_id: id};
 
-  // 1. First Create a Check and mark as in_progress
+  // 1. First Create a Check Suite and mark as in_progress
   const createdCheck = await context.github.checks.create({
     ...baseParams,
     head_sha,
@@ -27,7 +26,19 @@ export default async (context: Context) => {
   });
 
   try {
-    // 2. Fetch the commit
+    // 2. Download the repository and checkout the commit.
+    /**
+     * This is currently how the project is setup, since this is testing the whole repository at the time of the commit
+     * it's not optimised for performance, for example a project that totals 200mb and the commit diff compared with master
+     * may only be 5-6 files, I could just download those changed files and compare them against master. This would reduce
+     * time considerably.
+     *
+     * To do this there is the github repo get contents api.
+     * https://developer.github.com/v3/repos/contents/#get-contents
+     *
+     * Alternatively instead of using git to clone/checkout, I could use the GitHub get archive link api and downland and unzip
+     * https://developer.github.com/v3/repos/contents/#get-archive-link
+     */
     const repoPath = await getCommit({
       repo,
       owner,
@@ -37,9 +48,9 @@ export default async (context: Context) => {
     });
 
     // 3. Perform analysis on the files
-    const annotations = await checkLanguageFiles(repoPath);
+    const annotations = await runLanguageFiles(repoPath); // <-- we're only analysing language files atm
 
-    // 4. Update the Check
+    // 4. Update the Check Suite
     const issueCount = annotations.length;
     const conclusion: any = issueCount ? C.CHECK_CONCLUSION.FAILURE : C.CHECK_CONCLUSION.SUCCESS;
     const summary = issueCount ? `Looks like there are ${issueCount} issues to be resolved` : 'I hope we get to see this message';

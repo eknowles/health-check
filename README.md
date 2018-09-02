@@ -1,14 +1,18 @@
 # health-check
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that A Probot app
+> A GitHub App built with [Probot](https://github.com/probot/probot) that handles custom checks for internal projects
 
-# Requirements
+## Checks
 
-In order for nodegit to work, you need to have openssl installed localled
+This project serves as a PoC for GitHub Checks https://developer.github.com/v3/checks/
 
-```sh
-brew install openssl
-```
+### Language Files (Done)
+
+This check looks for issues within `lang.js` files.
+
+- Should not contain arrays
+- Should not contain booleans
+- Should not contain functions
 
 ## Setup
 
