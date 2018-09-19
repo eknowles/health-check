@@ -14,8 +14,13 @@ export default async (context: Context): Promise<void> => {
   const name = C.CHECK_NAMES.LANG_JS;
   const head_sha = check_suite.head_commit.id;
   const details_url = process.env.CHECK_DETAILS_URL_LANG;
-  const pull = context.payload.check_suite.pull_requests[0];
-  const {number} = pull;
+  const pulls = context.payload.check_suite.pull_requests;
+
+  if (pulls.length === 0) {
+    return;
+  }
+
+  const {number} = pulls[0];
 
   // fetch the list of files changed in this PR
   const pullFileResponse = await context.github.pullRequests.getFiles({owner, repo, number, per_page: 500, page: 1});
@@ -30,11 +35,14 @@ export default async (context: Context): Promise<void> => {
     status: C.CHECK_STATUS.IN_PROGRESS as any
   });
 
+  const checkUrl = `https://github.com/${owner}/${repo}/pull/${number}/checks?check_run_id=${createdCheck.data.id}`;
+
   try {
-    const downloadFiles = await getFiles(context, pullFileResponse.data);
+    // 2. Fetch files in the pr that end with lang.js
+    const files = await getFiles(context, pullFileResponse.data.filter((f) => f.filename.includes('/lang.js')));
 
     // 3. Perform analysis on the files
-    let annotations = await runLanguageFiles(downloadFiles);
+    let annotations = await runLanguageFiles(files);
 
     // 4. Update the Check Suite
     const issueCount = annotations.length;
@@ -60,7 +68,7 @@ export default async (context: Context): Promise<void> => {
     await context.github.checks.update(params);
 
     // 6. Profit.
-    // const checkUrl = `https://github.com/${owner}/${repo}/pull/${number}/checks?check_run_id=${createdCheck.data.id}`;
+    context.log.info('Updated Check: ' + checkUrl);
 
   } catch (e) {
     await context.github.checks.update({
