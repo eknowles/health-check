@@ -32,13 +32,12 @@ export default (options: IRegexFinderOptions): ChecksUpdateParamsOutputAnnotatio
     const issue: ChecksUpdateParamsOutputAnnotations = {
       title,
       message,
-      // @ts-ignore
-      annotation_level: level,
-      // @ts-ignore
+      annotation_level: level as any,
       path,
-      start_line: line,
-      end_line: line,
-      start_column: column
+      start_line: line + '' as any,
+      end_line: line + '' as any,
+      start_column: column + '' as any,
+      end_column: column + '' as any
     };
 
     issues.push(issue);

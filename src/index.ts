@@ -7,6 +7,8 @@ export = (app: Application) => {
   // Both Check Suite events will require a full analysis of the check runs
   app.on(C.EVENT.CHECK_SUITE.REQUESTED, CheckSuiteRequested);
   app.on(C.EVENT.CHECK_SUITE.REREQUESTED, CheckSuiteRequested);
+
+  // Check run rerequested should only run a specific check
   app.on(C.EVENT.CHECK_RUN.REREQUESTED, async (context: Context) => {
     console.log(context.payload);
     return;
