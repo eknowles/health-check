@@ -13,8 +13,6 @@ export default (files: IFile[]): Promise<ChecksUpdateParamsOutputAnnotations[]> 
     Promise
       .all(files.map((file) => findIssuesInFilePath(file)))
       .then((issues) => {
-
-        // @ts-ignore
         const annotations = issues
           .reduce((acc, curr) => [...acc, ...curr], [])
           .filter((a: any) => a);
