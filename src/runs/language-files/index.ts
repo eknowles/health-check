@@ -5,7 +5,6 @@ import finder from './finders';
 
 async function findIssuesInFilePath({filename, content}: IFile): Promise<ChecksUpdateParamsOutputAnnotations[]> {
   if (!filename.includes('/lang.js')) return [];
-  console.log(content);
   return finder(content, filename);
 }
 
