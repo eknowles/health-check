@@ -1,32 +1,26 @@
 import { ChecksUpdateParamsOutputAnnotations } from '@octokit/rest';
-import glob from 'glob';
+import { IFile } from '../../helpers/fetch-pull-files';
 
-import getFileContents from '../../helpers/get-file-contents';
 import finder from './finders';
 
-async function findIssuesInFilePath(filePath: string): Promise<ChecksUpdateParamsOutputAnnotations[]> {
-  const data = await getFileContents(filePath);
-
-  return finder(data, filePath);
+async function findIssuesInFilePath({filename, content}: IFile): Promise<ChecksUpdateParamsOutputAnnotations[]> {
+  if (!filename.includes('/lang.js')) return [];
+  console.log(content);
+  return finder(content, filename);
 }
 
-export default (repoPath: string): Promise<ChecksUpdateParamsOutputAnnotations[]> => {
+export default (files: IFile[]): Promise<ChecksUpdateParamsOutputAnnotations[]> => {
   return new Promise((resolve) => {
-    glob(`${repoPath}/**/lang.js`, {realpath: true}, (er, files) => {
-      Promise
-        .all(files.map((file) => findIssuesInFilePath(file)))
-        .then((issues) => {
+    Promise
+      .all(files.map((file) => findIssuesInFilePath(file)))
+      .then((issues) => {
 
-          const annotations = issues
-            .reduce((acc, curr) => [...acc, ...curr], [])
-            .filter((a: any) => a)
-            .map((issue: any) => ({
-              ...issue,
-              path: issue.path.replace(`${repoPath}/`, ''),
-            }));
+        // @ts-ignore
+        const annotations = issues
+          .reduce((acc, curr) => [...acc, ...curr], [])
+          .filter((a: any) => a);
 
-          resolve(annotations);
-        });
-    });
+        resolve(annotations);
+      });
   });
 }

@@ -28,6 +28,9 @@ function checkoutCommit(commit: string, path: string): Promise<string> {
   }));
 }
 
+/**
+ * @deprecated
+ */
 export default (options: IGetCommitOptions): Promise<string> => {
   const {owner, token, repo, sha} = options;
   const url = `https://${token}@github.com/${owner}/${repo}`;
