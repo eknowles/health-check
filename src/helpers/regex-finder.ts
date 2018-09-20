@@ -34,10 +34,10 @@ export default (options: IRegexFinderOptions): ChecksUpdateParamsOutputAnnotatio
       message,
       annotation_level: level as any,
       path,
-      start_line: line + '' as any,
-      end_line: line + '' as any,
-      start_column: column + '' as any,
-      end_column: column + '' as any
+      start_line: line,
+      end_line: line,
+      start_column: column,
+      end_column: column
     };
 
     issues.push(issue);

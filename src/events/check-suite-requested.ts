@@ -2,6 +2,7 @@ import { Context } from 'probot';
 
 import getFiles from '../helpers/fetch-pull-files';
 import runLanguageFiles from '../runs/language-files';
+import generateGif from '../helpers/get-random-gif';
 import * as C from '../constants';
 
 export default async (context: Context): Promise<void> => {
@@ -58,6 +59,12 @@ export default async (context: Context): Promise<void> => {
         title: summary,
         summary,
         annotations,
+        images: [
+          {
+            image_url: await generateGif(conclusion),
+            alt: conclusion,
+          }
+        ]
       }
     };
 
