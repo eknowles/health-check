@@ -13,12 +13,16 @@ export default function(
   const owner = repository.owner.login;
   const repo = repository.name;
 
-  return Promise.all(files.map(async ({sha, filename}) => {
-    const {data: {content, encoding}} = await github.gitdata.getBlob({owner, repo, file_sha: sha});
+  const filePromises = files
+    .filter((file) => file.status !== 'removed')
+    .map(async ({sha, filename}) => {
+      const {data: {content, encoding}} = await github.gitdata.getBlob({owner, repo, file_sha: sha});
 
-    return {
-      filename,
-      content: encoding === 'base64' ? Buffer.from(content, 'base64').toString('utf8') : content
-    };
-  }));
+      return {
+        filename,
+        content: encoding === 'base64' ? Buffer.from(content, 'base64').toString('utf8') : content
+      };
+    });
+
+  return Promise.all(filePromises);
 }
