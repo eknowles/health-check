@@ -3,6 +3,11 @@ export const CHECK_NAMES = {
 };
 
 export const EVENT = {
+  STATUS: 'status',
+  PR: {
+    OPENED: 'pull_request.opened',
+    REOPENED: 'pull_request.reopened',
+  },
   CHECK_SUITE: {
     REQUESTED: 'check_suite.requested',
     REREQUESTED: 'check_suite.rerequested'
@@ -30,4 +35,9 @@ export const CHECK_CONCLUSION = {
   CONCLUSION: 'conclusion',
   STATUS: 'status',
   COMPLETE: 'complete',
+};
+
+export const URLS = {
+  ICU_FORMAT: 'https://formatjs.io/guides/message-syntax/',
+  PHRASE_APP_FORMAT: 'https://phraseapp.com/docs/guides/formats/simple-json/',
 };

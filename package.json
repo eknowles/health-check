@@ -22,8 +22,12 @@
   },
   "dependencies": {
     "@octokit/rest": "^15.11.4",
+    "intl-messageformat": "^2.2.0",
     "phin": "^2.9.2",
     "probot": "^7.1.2"
+  },
+  "fedChecks": {
+    "locale": "en"
   },
   "devDependencies": {
     "@types/jest": "^23.1.5",

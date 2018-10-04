@@ -39,6 +39,27 @@ npm run build
 npm start
 ```
 
+## Developing
+
+- Requires wti cli for updating translation files
+
+```sh
+gem install web_translate_it
+```
+
+Create a `.wti` file in `./locales/` with the API key for webtranslateit
+
+```
+api_key: proj_pvt_Nu2ECXxskpCiF2bKGPcbsw
+```
+
+### Pulling Translation Files
+
+```sh
+$ cd locales
+$ wti pull
+```
+
 ## Contributing
 
 If you have suggestions for how health-check could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
