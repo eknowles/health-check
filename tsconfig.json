@@ -11,9 +11,10 @@
     "pretty": false,
     "strict": true,
     "sourceMap": true,
+    "strictNullChecks": false,
     "outDir": "./lib",
     "skipLibCheck": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "esModuleInterop": true,
     "declaration": false
   },

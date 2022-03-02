@@ -1,0 +1,13 @@
+{
+  "checkArrayMsg": "Give each item a unique key ({url})",
+  "checkArrayTitle": "Arrays not allowed in language files",
+  "checkBooleanMsg": "Remove config from translations",
+  "checkBooleanTitle": "Booleans not allowed in language files",
+  "checkFunctionMsg": "Switch to ICU message format ({url})",
+  "checkFunctionTitle": "Functions not allowed in language files",
+  "checkNumberMsg": "Remove config from translations",
+  "checkNumberTitle": "Numbers not allowed in language files",
+  "failSummary": "At some point during the analysis a promise was rejected or threw an error",
+  "failTitle": "Something failed, sorry!",
+  "issueSummary": "{count, plural, =0 {No issues}, one {One issue}, other {{count} issues}} to be resolved"
+}
