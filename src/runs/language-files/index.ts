@@ -5,7 +5,6 @@ import finder from './finders';
 
 async function findIssuesInFilePath({filename, content}: IFile): Promise<ChecksUpdateParamsOutputAnnotations[]> {
   if (!filename.includes('/lang.js')) return [];
-  console.log(content);
   return finder(content, filename);
 }
 
@@ -14,8 +13,6 @@ export default (files: IFile[]): Promise<ChecksUpdateParamsOutputAnnotations[]> 
     Promise
       .all(files.map((file) => findIssuesInFilePath(file)))
       .then((issues) => {
-
-        // @ts-ignore
         const annotations = issues
           .reduce((acc, curr) => [...acc, ...curr], [])
           .filter((a: any) => a);
